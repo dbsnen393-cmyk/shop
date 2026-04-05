@@ -15,7 +15,7 @@ end
 begin
   LineItem.destroy_all
   Product.destroy_all
-rescue => e
+rescue Exception => e
   puts "Could not destroy: #{e.message}"
 end
 
@@ -88,20 +88,26 @@ products = [
   }
 ]
 
+# Step 1: Create all products without images (guaranteed)
+created = []
 products.each do |attrs|
   image_url = attrs.delete(:image_url)
   product = Product.new(attrs.merge(user: user))
-  begin
-    product.remote_image_url = image_url if image_url
-    product.save
+  if product.save
     puts "Created: #{product.title}"
-  rescue => e
-    # Try saving without image if upload fails
-    product.image = nil
-    if product.save
-      puts "Created without image: #{product.title} (#{e.message})"
-    else
-      puts "Failed: #{attrs[:title]}: #{product.errors.full_messages.join(', ')}"
-    end
+    created << { product: product, image_url: image_url }
+  else
+    puts "Failed: #{attrs[:title]}: #{product.errors.full_messages.join(', ')}"
+  end
+end
+
+# Step 2: Attach images separately
+created.each do |entry|
+  begin
+    entry[:product].remote_image_url = entry[:image_url]
+    entry[:product].save
+    puts "Image uploaded: #{entry[:product].title}"
+  rescue Exception => e
+    puts "Image failed for #{entry[:product].title}: #{e.message}"
   end
 end
