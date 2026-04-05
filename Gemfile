@@ -40,6 +40,7 @@ gem 'devise', '~> 4.4'
 gem 'gravatar_image_tag', '~> 1.2'
 gem 'carrierwave', '~> 2.0'
 gem 'mini_magick'
+gem 'cloudinary', '~> 1.28'
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.

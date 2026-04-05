@@ -1,18 +1,26 @@
 class ImageUploader < CarrierWave::Uploader::Base
-  # Include RMagick or MiniMagick support:
-  # include CarrierWave::RMagick
-  # include CarrierWave::MiniMagick # Requires ImageMagick installed on system
+  if Rails.env.production?
+    include Cloudinary::CarrierWave
 
-  # Choose what kind of storage to use for this uploader:
-  storage :file
+    process convert: 'jpg'
+
+    version :thumb do
+      cloudinary_transformation crop: :fill, width: 400, height: 300, gravity: :auto
+    end
+
+    version :default do
+      cloudinary_transformation crop: :fill, width: 800, height: 600, gravity: :auto
+    end
+  else
+    storage :file
+
+    version :thumb
+    version :default
+  end
 
   def store_dir
     "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
-
-  # Versions defined without processing (ImageMagick not required)
-  version :thumb
-  version :default
 
   def extension_allowlist
     %w(jpg jpeg gif png)
