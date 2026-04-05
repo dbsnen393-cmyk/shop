@@ -4,15 +4,36 @@
 
 ---
 
-## Что нужно установить
+## Запуск без установки (онлайн)
+
+Если нельзя ничего устанавливать на компьютер — использовать онлайн-среду прямо в браузере:
+
+### GitHub Codespaces (рекомендуется)
+
+1. Открыть репозиторий на GitHub
+2. Нажать кнопку **Code** → вкладка **Codespaces** → **Create codespace on main**
+3. Откроется VS Code в браузере с уже установленным Ruby и Node.js
+4. В терминале выполнить:
+```bash
+bundle install
+yarn install --ignore-scripts
+NODE_OPTIONS=--openssl-legacy-provider bundle exec rake webpacker:compile
+bundle exec rake db:create db:migrate db:seed
+NODE_OPTIONS=--openssl-legacy-provider bundle exec rails server
+```
+5. Codespaces автоматически предложит открыть порт 3000 в браузере
+
+---
+
+## Установка на Windows
 
 ### 1. Ruby
 
-Скачать и установить с официального сайта: https://rubyinstaller.org/downloads/
+Скачать и установить: https://rubyinstaller.org/downloads/
 
 Версия, используемая в проекте: **Ruby 3.3.11+Devkit (x64)**. Нужна именно версия с Devkit — она включает компилятор для сборки нативных гемов.
 
-Проверка после установки:
+Проверка:
 ```
 ruby --version
 ```
@@ -21,9 +42,7 @@ ruby --version
 
 ### 2. Node.js
 
-Скачать с официального сайта: https://nodejs.org/
-
-Версии 14–22 совместимы с проектом. Node.js 23+ не поддерживается Webpack 4.
+Скачать: https://nodejs.org/ — выбирать версию **LTS**. Версии 14–22 совместимы. Node.js 23+ не поддерживается Webpack 4.
 
 Проверка:
 ```
@@ -33,8 +52,6 @@ node --version
 ---
 
 ### 3. Yarn
-
-После установки Node.js выполнить в терминале:
 
 **PowerShell / CMD:**
 ```
@@ -54,7 +71,7 @@ yarn --version
 
 ---
 
-### 4. Bundler (менеджер Ruby-гемов)
+### 4. Bundler
 
 ```
 gem install bundler
@@ -67,18 +84,73 @@ bundler --version
 
 ---
 
+## Установка на macOS
+
+### 1. Ruby
+
+macOS поставляется со старой версией Ruby. Нужно установить актуальную через Homebrew.
+
+Установить Homebrew (если не установлен):
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Установить rbenv и Ruby 3.3.x:
+```bash
+brew install rbenv
+rbenv install 3.3.4
+rbenv global 3.3.4
+```
+
+Проверка:
+```bash
+ruby --version
+```
+
+---
+
+### 2. Node.js
+
+```bash
+brew install node@20
+```
+
+Или скачать вручную: https://nodejs.org/
+
+Проверка:
+```bash
+node --version
+```
+
+---
+
+### 3. Yarn
+
+```bash
+npm install -g yarn
+```
+
+Проверка:
+```bash
+yarn --version
+```
+
+---
+
+### 4. Bundler
+
+```bash
+gem install bundler
+```
+
+---
+
 ## Первый запуск (выполняется один раз)
 
 Открыть терминал в папке проекта и выполнить команды по порядку.
 
 ### Шаг 1 — Установка Ruby-зависимостей
 
-**PowerShell:**
-```powershell
-bundle install
-```
-
-**CMD / bash:**
 ```bash
 bundle install
 ```
@@ -87,63 +159,58 @@ bundle install
 
 ### Шаг 2 — Установка JavaScript-зависимостей
 
-**PowerShell:**
-```powershell
-yarn install --ignore-scripts
-```
-
-**CMD / bash:**
 ```bash
 yarn install --ignore-scripts
 ```
+
+> Флаг `--ignore-scripts` нужен, чтобы пропустить сборку `node-sass`, который не работает на Node.js 17+.
 
 ---
 
 ### Шаг 3 — Компиляция JavaScript
 
-**PowerShell:**
+**macOS / Linux / Git Bash:**
+```bash
+NODE_OPTIONS=--openssl-legacy-provider bundle exec rake webpacker:compile
+```
+
+**PowerShell (Windows):**
 ```powershell
 $env:NODE_OPTIONS="--openssl-legacy-provider"; bundle exec rake webpacker:compile
 ```
 
-**CMD:**
+**CMD (Windows):**
 ```cmd
 set NODE_OPTIONS=--openssl-legacy-provider && bundle exec rake webpacker:compile
-```
-
-**bash (Git Bash / WSL):**
-```bash
-NODE_OPTIONS=--openssl-legacy-provider bundle exec rake webpacker:compile
 ```
 
 ---
 
 ### Шаг 4 — Создание базы данных и загрузка тестовых данных
 
-**PowerShell / CMD / bash:**
-```
+```bash
 bundle exec rake db:create db:migrate db:seed
 ```
 
-Эта команда создаёт БД, применяет миграции и загружает тестового пользователя + 4 продукта.
+Создаёт БД, применяет миграции и загружает тестового пользователя + 4 продукта с изображениями.
 
 ---
 
 ### Шаг 5 — Запуск сервера
 
-**PowerShell:**
+**macOS / Linux / Git Bash:**
+```bash
+NODE_OPTIONS=--openssl-legacy-provider bundle exec rails server
+```
+
+**PowerShell (Windows):**
 ```powershell
 $env:NODE_OPTIONS="--openssl-legacy-provider"; bundle exec rails server
 ```
 
-**CMD:**
+**CMD (Windows):**
 ```cmd
 set NODE_OPTIONS=--openssl-legacy-provider && bundle exec rails server
-```
-
-**bash (Git Bash / WSL):**
-```bash
-NODE_OPTIONS=--openssl-legacy-provider bundle exec rails server
 ```
 
 Открыть в браузере: **http://localhost:3000**
@@ -154,19 +221,19 @@ NODE_OPTIONS=--openssl-legacy-provider bundle exec rails server
 
 Для последующих запусков нужна только одна команда:
 
-**PowerShell:**
+**macOS / Linux / Git Bash:**
+```bash
+NODE_OPTIONS=--openssl-legacy-provider bundle exec rails server
+```
+
+**PowerShell (Windows):**
 ```powershell
 $env:NODE_OPTIONS="--openssl-legacy-provider"; bundle exec rails server
 ```
 
-**CMD:**
+**CMD (Windows):**
 ```cmd
 set NODE_OPTIONS=--openssl-legacy-provider && bundle exec rails server
-```
-
-**bash (Git Bash / WSL):**
-```bash
-NODE_OPTIONS=--openssl-legacy-provider bundle exec rails server
 ```
 
 ---
@@ -186,7 +253,12 @@ NODE_OPTIONS=--openssl-legacy-provider bundle exec rails server
 
 ### `A server is already running`
 
-Сервер уже запущен (остался с прошлого раза). Нужно удалить PID-файл и запустить заново:
+Нужно удалить PID-файл и запустить заново:
+
+**macOS / Git Bash:**
+```bash
+rm tmp/pids/server.pid && NODE_OPTIONS=--openssl-legacy-provider bundle exec rails server
+```
 
 **PowerShell:**
 ```powershell
@@ -198,16 +270,11 @@ Remove-Item tmp\pids\server.pid; $env:NODE_OPTIONS="--openssl-legacy-provider"; 
 del tmp\pids\server.pid && set NODE_OPTIONS=--openssl-legacy-provider && bundle exec rails server
 ```
 
-**bash:**
-```bash
-rm tmp/pids/server.pid && NODE_OPTIONS=--openssl-legacy-provider bundle exec rails server
-```
-
 ---
 
 ### `Yarn not installed`
 
-```
+```bash
 npm install -g yarn
 ```
 
@@ -215,7 +282,7 @@ npm install -g yarn
 
 ### `error:0308010C:digital envelope routines::unsupported`
 
-Webpack 4 не совместим с OpenSSL от Node.js 17+. Необходимо использовать `$env:NODE_OPTIONS="--openssl-legacy-provider"` перед командами webpacker и rails server — так, как показано в шагах выше.
+Webpack 4 не совместим с OpenSSL от Node.js 17+. Необходимо использовать `NODE_OPTIONS=--openssl-legacy-provider` перед командами — так, как показано в шагах выше.
 
 ---
 
@@ -223,14 +290,14 @@ Webpack 4 не совместим с OpenSSL от Node.js 17+. Необходи�
 
 Файл БД заблокирован. Необходимо остановить сервер, затем выполнить:
 
+**macOS / Git Bash:**
+```bash
+rm db/development.sqlite3 && bundle exec rake db:create db:migrate db:seed
+```
+
 **PowerShell:**
 ```powershell
 Remove-Item db\development.sqlite3; bundle exec rake db:create db:migrate db:seed
-```
-
-**bash:**
-```bash
-rm db/development.sqlite3 && bundle exec rake db:create db:migrate db:seed
 ```
 
 ---
@@ -239,7 +306,7 @@ rm db/development.sqlite3 && bundle exec rake db:create db:migrate db:seed
 
 ImageMagick не установлен — приложение работает без него. Для включения ресайза изображений:
 
-1. Установить [ImageMagick](https://imagemagick.org/script/download.php#windows)
+1. Установить [ImageMagick](https://imagemagick.org/script/download.php) (на macOS: `brew install imagemagick`)
 2. Раскомментировать в `app/uploaders/image_uploader.rb`:
    ```ruby
    include CarrierWave::MiniMagick
