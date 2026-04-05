@@ -1,0 +1,56 @@
+<% content_for :header do %>
+<section class="hero is-warning">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">Your Cart</h1>
+    </div>
+  </div>
+</section>
+<% end %>
+
+<section class="section">
+  <% if @cart.line_items.empty? %>
+    <p class="has-text-centered">Your cart is empty. <%= link_to "Browse products", root_path %></p>
+  <% else %>
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @cart.line_items.each do |item| %>
+          <tr>
+            <td><%= link_to item.product.title, item.product %></td>
+            <td><%= number_to_currency(item.product.price) %></td>
+            <td><%= item.quantity %></td>
+            <td><%= number_to_currency(item.total_price) %></td>
+            <td>
+              <%= link_to "Remove", line_item_path(item), method: :delete,
+                    data: { confirm: "Remove this item?" },
+                    class: "button is-small is-danger" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" class="has-text-weight-bold has-text-right">Total:</td>
+          <td class="has-text-weight-bold"><%= number_to_currency(@cart.total_price) %></td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="mt4">
+      <%= link_to "Empty Cart", @cart, method: :delete,
+            data: { confirm: "Empty your entire cart?" },
+            class: "button is-danger" %>
+      <%= link_to "Continue Shopping", root_path, class: "button is-warning ml3" %>
+    </div>
+  <% end %>
+</section>
