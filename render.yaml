@@ -1,0 +1,26 @@
+databases:
+  - name: shop_db
+    databaseName: shop_db
+    user: shop_user
+    plan: free
+
+services:
+  - type: web
+    name: shop
+    env: ruby
+    plan: free
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec rails server -p $PORT -b 0.0.0.0"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: shop_db
+          property: connectionString
+      - key: SECRET_KEY_BASE
+        generateValue: true
+      - key: NODE_OPTIONS
+        value: --openssl-legacy-provider
+      - key: RAILS_SERVE_STATIC_FILES
+        value: true
+      - key: RAILS_ENV
+        value: production
