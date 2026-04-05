@@ -76,6 +76,22 @@
            </div>
          </div>
 
+        <div class="columns">
+          <div class="field column is-4">
+            <div class="control">
+              <label class="label">Category</label>
+              <div class="control has-icons-left">
+                <span class="select">
+                  <%= f.input_field :category, collection: Product::CATEGORY, prompt: "Select category" %>
+                </span>
+                <span class="icon is-small is-left">
+                  <i class="fa fa-tag"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="field">
           <div class="control">
             <label class="label">Add images</label>
