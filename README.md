@@ -36,6 +36,42 @@
 
 ---
 
+## Структура проекта
+
+```
+shop/
+├── app/
+│   ├── controllers/
+│   │   ├── products_controller.rb   # CRUD товаров
+│   │   ├── carts_controller.rb      # Корзина
+│   │   ├── line_items_controller.rb # Позиции в корзине
+│   │   └── registrations_controller.rb # Регистрация (Devise)
+│   ├── models/
+│   │   ├── product.rb               # Модель товара (валидации, загрузка фото)
+│   │   ├── user.rb                  # Модель пользователя
+│   │   ├── cart.rb                  # Модель корзины
+│   │   └── line_item.rb             # Позиция в корзине
+│   ├── views/
+│   │   ├── products/                # Шаблоны страниц товаров
+│   │   ├── carts/                   # Страница корзины
+│   │   └── layouts/                 # Общий layout (навбар, flash)
+│   └── uploaders/
+│       └── image_uploader.rb        # CarrierWave + Cloudinary
+├── db/
+│   ├── migrate/                     # Миграции базы данных
+│   ├── schema.rb                    # Текущая схема БД
+│   └── seeds.rb                     # Тестовые данные (6 товаров)
+├── config/
+│   ├── routes.rb                    # Маршруты
+│   └── initializers/
+│       └── cloudinary.rb            # Настройка Cloudinary
+├── bin/
+│   └── render-build.sh              # Скрипт сборки для Render
+└── render.yaml                      # Конфигурация деплоя на Render
+```
+
+---
+
 ## Функциональность
 
 - **Регистрация и вход** — Devise (имя, email, пароль)
