@@ -28,7 +28,8 @@ products = [
     condition: "Mint",
     finish: "Black",
     price: "100",
-    category: "Watches"
+    category: "Watches",
+    image_url: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800"
   },
   {
     title: "Opel Corsa",
@@ -38,7 +39,8 @@ products = [
     condition: "Excellent",
     finish: "Red",
     price: "15000",
-    category: "Cars"
+    category: "Cars",
+    image_url: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800"
   },
   {
     title: "Ferrari F12",
@@ -48,7 +50,8 @@ products = [
     condition: "New",
     finish: "Black",
     price: "160000",
-    category: "Cars"
+    category: "Cars",
+    image_url: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800"
   },
   {
     title: "ThinkPad X1 Carbon",
@@ -58,7 +61,8 @@ products = [
     condition: "Used",
     finish: "Black",
     price: "500",
-    category: "Computers"
+    category: "Computers",
+    image_url: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800"
   },
   {
     title: "iPhone 15 Pro",
@@ -68,7 +72,8 @@ products = [
     condition: "New",
     finish: "Silver",
     price: "1200",
-    category: "Phones"
+    category: "Phones",
+    image_url: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=800"
   },
   {
     title: "Samsung Neo QLED TV",
@@ -78,15 +83,25 @@ products = [
     condition: "New",
     finish: "Black",
     price: "1500",
-    category: "Electronics"
+    category: "Electronics",
+    image_url: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=800"
   }
 ]
 
 products.each do |attrs|
+  image_url = attrs.delete(:image_url)
   product = Product.new(attrs.merge(user: user))
-  if product.save
+  begin
+    product.remote_image_url = image_url if image_url
+    product.save
     puts "Created: #{product.title}"
-  else
-    puts "Failed: #{attrs[:title]}: #{product.errors.full_messages.join(', ')}"
+  rescue => e
+    # Try saving without image if upload fails
+    product.image = nil
+    if product.save
+      puts "Created without image: #{product.title} (#{e.message})"
+    else
+      puts "Failed: #{attrs[:title]}: #{product.errors.full_messages.join(', ')}"
+    end
   end
 end
