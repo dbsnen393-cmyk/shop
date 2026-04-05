@@ -6,26 +6,6 @@
 
 ---
 
-## Запуск без установки (онлайн)
-
-Если нельзя ничего устанавливать на компьютер — использовать онлайн-среду прямо в браузере:
-
-### GitHub Codespaces (рекомендуется)
-
-1. Открыть репозиторий на GitHub
-2. Нажать кнопку **Code** → вкладка **Codespaces** → **Create codespace on main**
-3. Откроется VS Code в браузере с уже установленным Ruby и Node.js
-4. В терминале выполнить:
-```bash
-bundle install
-yarn install --ignore-scripts
-NODE_OPTIONS=--openssl-legacy-provider bundle exec rake webpacker:compile
-bundle exec rake db:create db:migrate db:seed
-NODE_OPTIONS=--openssl-legacy-provider bundle exec rails server
-```
-5. Codespaces автоматически предложит открыть порт 3000 в браузере
-
----
 
 ## Установка на Windows
 
