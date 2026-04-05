@@ -16,49 +16,65 @@ if Product.count == 0
       title: "Watch",
       brand: "Fossil",
       model: "FH256",
-      description: "Good watch for men!",
+      description: "Good watch for men! Classic design, water resistant.",
       condition: "Mint",
       finish: "Black",
       price: "100",
-      image_path: "app/assets/images/fossil.jpg"
+      category: "Watches"
     },
     {
-      title: "Car",
+      title: "Opel Corsa",
       brand: "Opel",
       model: "Corsa",
-      description: "Cool red car",
+      description: "Cool red car, low mileage, great condition.",
       condition: "Excellent",
       finish: "Red",
       price: "15000",
-      image_path: "app/assets/images/opel.jpeg"
+      category: "Cars"
     },
     {
-      title: "Car",
+      title: "Ferrari F12",
       brand: "Ferrari",
       model: "F12",
-      description: "Cool sports car",
+      description: "Cool sports car, incredible performance.",
       condition: "New",
       finish: "Black",
       price: "160000",
-      image_path: "app/assets/images/ferrari.jpeg"
+      category: "Cars"
     },
     {
-      title: "Computer",
+      title: "ThinkPad X1 Carbon",
       brand: "Lenovo",
       model: "ThinkPad X1 Carbon Touch",
-      description: "The Lenovo ThinkPad X1 Carbon Touch is an incredibly thin and light business ultrabook.",
+      description: "Incredibly thin and light business ultrabook with a 14-inch touch display.",
       condition: "Used",
       finish: "Black",
       price: "500",
-      image_path: "app/assets/images/computer.jpg"
+      category: "Computers"
+    },
+    {
+      title: "iPhone 15 Pro",
+      brand: "Apple",
+      model: "iPhone 15 Pro",
+      description: "Latest Apple flagship with titanium design and A17 Pro chip.",
+      condition: "New",
+      finish: "Silver",
+      price: "1200",
+      category: "Phones"
+    },
+    {
+      title: "Samsung 4K TV",
+      brand: "Samsung",
+      model: "QN90C Neo QLED",
+      description: "55 inch 4K Smart TV with quantum dot technology.",
+      condition: "New",
+      finish: "Black",
+      price: "1500",
+      category: "Electronics"
     }
   ]
 
   products.each do |attrs|
-    image_path = attrs.delete(:image_path)
-    product = Product.new(attrs.merge(user: user))
-    full_path = Rails.root.join(image_path)
-    product.image = File.open(full_path) if File.exist?(full_path)
-    product.save!
+    Product.create!(attrs.merge(user: user))
   end
 end
