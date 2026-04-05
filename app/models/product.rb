@@ -4,7 +4,6 @@ class Product < ApplicationRecord
   belongs_to :user, optional: true
 
   mount_uploader :image, ImageUploader
-  serialize :image, JSON # If you use SQLite, add this line
 
   validates :title, :brand, :price, :model, presence: true
   # Set max lenght to the description, price and title 
