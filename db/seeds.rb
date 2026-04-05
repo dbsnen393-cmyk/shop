@@ -11,8 +11,9 @@ unless user
   )
 end
 
-# Seed products if none exist
-if Product.count == 0
+# Always reseed products
+Product.destroy_all
+if true
   products = [
     {
       title: "Fossil Watch",
