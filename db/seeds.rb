@@ -16,7 +16,7 @@ begin
   LineItem.destroy_all
   Product.destroy_all
 rescue => e
-  puts "Could not destroy products: #{e.message}"
+  puts "Could not destroy: #{e.message}"
 end
 
 products = [
@@ -90,14 +90,23 @@ products = [
 
 products.each do |attrs|
   image_url = attrs.delete(:image_url)
+
+  # First save without image (guaranteed to work)
   product = Product.new(attrs.merge(user: user))
-  begin
-    product.remote_image_url = image_url if image_url
-  rescue => e
-    puts "Could not load image for #{attrs[:title]}: #{e.message}"
-  end
   if product.save
     puts "Created: #{product.title}"
+
+    # Then try to attach image separately
+    begin
+      product.remote_image_url = image_url
+      if product.save
+        puts "  Image uploaded for: #{product.title}"
+      else
+        puts "  Image failed for #{product.title}: #{product.errors.full_messages.join(', ')}"
+      end
+    rescue => e
+      puts "  Could not upload image for #{product.title}: #{e.message}"
+    end
   else
     puts "Failed to save #{attrs[:title]}: #{product.errors.full_messages.join(', ')}"
   end
