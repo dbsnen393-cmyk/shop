@@ -2,8 +2,6 @@ class ImageUploader < CarrierWave::Uploader::Base
   if Rails.env.production?
     include Cloudinary::CarrierWave
 
-    process convert: 'jpg'
-
     version :thumb do
       cloudinary_transformation crop: :fill, width: 400, height: 300, gravity: :auto
     end

@@ -28,8 +28,7 @@ products = [
     condition: "Mint",
     finish: "Black",
     price: "100",
-    category: "Watches",
-    image_url: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800"
+    category: "Watches"
   },
   {
     title: "Opel Corsa",
@@ -39,8 +38,7 @@ products = [
     condition: "Excellent",
     finish: "Red",
     price: "15000",
-    category: "Cars",
-    image_url: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800"
+    category: "Cars"
   },
   {
     title: "Ferrari F12",
@@ -50,8 +48,7 @@ products = [
     condition: "New",
     finish: "Black",
     price: "160000",
-    category: "Cars",
-    image_url: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800"
+    category: "Cars"
   },
   {
     title: "ThinkPad X1 Carbon",
@@ -61,8 +58,7 @@ products = [
     condition: "Used",
     finish: "Black",
     price: "500",
-    category: "Computers",
-    image_url: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800"
+    category: "Computers"
   },
   {
     title: "iPhone 15 Pro",
@@ -72,8 +68,7 @@ products = [
     condition: "New",
     finish: "Silver",
     price: "1200",
-    category: "Phones",
-    image_url: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=800"
+    category: "Phones"
   },
   {
     title: "Samsung Neo QLED TV",
@@ -83,31 +78,15 @@ products = [
     condition: "New",
     finish: "Black",
     price: "1500",
-    category: "Electronics",
-    image_url: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=800"
+    category: "Electronics"
   }
 ]
 
 products.each do |attrs|
-  image_url = attrs.delete(:image_url)
-
-  # First save without image (guaranteed to work)
   product = Product.new(attrs.merge(user: user))
   if product.save
     puts "Created: #{product.title}"
-
-    # Then try to attach image separately
-    begin
-      product.remote_image_url = image_url
-      if product.save
-        puts "  Image uploaded for: #{product.title}"
-      else
-        puts "  Image failed for #{product.title}: #{product.errors.full_messages.join(', ')}"
-      end
-    rescue => e
-      puts "  Could not upload image for #{product.title}: #{e.message}"
-    end
   else
-    puts "Failed to save #{attrs[:title]}: #{product.errors.full_messages.join(', ')}"
+    puts "Failed: #{attrs[:title]}: #{product.errors.full_messages.join(', ')}"
   end
 end
