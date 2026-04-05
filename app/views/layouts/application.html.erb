@@ -13,15 +13,26 @@
   <body>
    <body class="<%= yield (:body_class) %>">
     <% if flash[:notice] %>
-      <div class="notification is-success global-notification">
+      <div class="notification is-success global-notification js-flash">
         <p class="notice"><%= notice %></p>
       </div>
     <% end %>
     <% if flash[:alert] %>
-    <div class="notification is-danger global-notification">
+    <div class="notification is-danger global-notification js-flash">
       <p class="alert"><%= alert %></p>
     </div>
     <% end %>
+    <script>
+      document.addEventListener("turbolinks:load", function() {
+        document.querySelectorAll(".js-flash").forEach(function(el) {
+          setTimeout(function() {
+            el.style.transition = "opacity 0.5s";
+            el.style.opacity = "0";
+            setTimeout(function() { el.remove(); }, 500);
+          }, 3000);
+        });
+      });
+    </script>
      <nav class="navbar is-warning" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <%= link_to root_path, class:"navbar-item" do %>
